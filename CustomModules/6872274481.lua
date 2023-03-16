@@ -1057,6 +1057,52 @@ GuiLibrary.LoadSettingsEvent.Event:Connect(function(res)
 	end
 end)
 
+runcode(function()
+    local Chat = {["Enabled"] = false}
+    
+    Chat = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Chat",
+        ["HoverText"] = "Moves the Chat",
+        ["Function"] = function(callback)
+            if callback then
+                game:GetService("StarterGui"):SetCore('ChatWindowPosition', UDim2.new(0, 0, 0, 700))
+            else
+                game:GetService("StarterGui"):SetCore('ChatWindowPosition', UDim2.new(0, 0, 0, 0))
+            end
+        end
+    })
+end)
+
+runcode(function()
+    local KillFeed = {["Enabled"] = false}
+    local container
+
+    KillFeed = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "KillFeed",
+        ["HoverText"] = "Destroys the KillFeed",
+        ["Function"] = function(callback)
+            if callback then
+                task.spawn(function()
+                    if container == nil then
+                        repeat
+                            local suc, res = pcall(function() return lplr.PlayerGui.KillFeedGui.KillFeedContainer end)
+                            if suc then
+                                container = res
+                            end
+                            task.wait()
+                        until container ~= nil
+                    end
+                    container.Visible = false
+                end)
+            else
+                if container then
+                    container.Visible = true
+                end
+            end
+        end
+    })
+end)
+
 runFunction(function()
 	local function getWhitelistedBed(bed)
 		for i,v in pairs(playersService:GetPlayers()) do
